@@ -36,7 +36,7 @@ function onEdit(e) {
     var weight = editedSheet.getRange(row, 3).getValue();    // Column C -- weight
     var reps = editedSheet.getRange(row, 4).getValue();      // Column D -- reps
     var sets = editedSheet.getRange(row, 5).getValue();      // Column E -- sets
-    var notes = editedSheet.getRange(row, 6).getValue();     // Column F -- notes
+    var max_reps = editedSheet.getRange(row, 6).getValue();     // Column F -- max_reps
 
     if (is_invalid_value(exercise) || is_invalid_value(weight) || is_invalid_value(reps) || is_invalid_value(sets)) {
       Logger.log("Not performing update: Required value(s) empty")
@@ -44,7 +44,7 @@ function onEdit(e) {
     }
     
     // Log this to the History sheet
-    log_to_history(type, exercise, weight, reps, sets, notes);
+    log_to_history(type, exercise, weight, reps, sets, max_reps);
   }
 
   // ------------------------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ function onEdit(e) {
   // ------------------------------------------------------------------------------------------------
   // Logs workout data to History sheet with timestamp
   // ------------------------------------------------------------------------------------------------
-  function log_to_history(type, exercise, weight, reps, sets, notes) {
+  function log_to_history(type, exercise, weight, reps, sets, max_reps) {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var historySheet = ss.getSheetByName("history");
     
@@ -66,7 +66,7 @@ function onEdit(e) {
       historySheet = ss.insertSheet("history");
       // Add headers
       historySheet.getRange("A1:H1").setValues([
-        ["Timestamp", "Type", "Exercise", "Weight (lbs)", "Reps", "Sets", "Volume", "Notes"]
+        ["Timestamp", "Type", "Exercise", "Weight (lbs)", "Reps", "Sets", "Volume", "Max"]
       ]);
       // Format header
       historySheet.getRange("A1:H1").setFontWeight("bold");
@@ -77,7 +77,7 @@ function onEdit(e) {
     
     // Add new row with date
     var timestamp = new Date();
-    historySheet.appendRow([timestamp.toLocaleDateString(), type, exercise, weight, reps, sets, volume, notes]);
+    historySheet.appendRow([timestamp.toLocaleDateString(), type, exercise, weight, reps, sets, volume, max_reps]);
     
     // Log to console for debugging
     Logger.log("logged: [" + type + "] " + exercise + " - " + weight + "lbs × " + reps + " × " + sets + " = " + volume + " total volume");
