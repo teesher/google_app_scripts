@@ -29,10 +29,10 @@ class CardioExercise extends Exercise {
         return new HistoricalExercise(
             this.type,
             this.exercise_name,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
+            "",
+            "",
+            "",
+            "",
             this.mph
         )
     }
@@ -63,7 +63,7 @@ class LiftExercise extends Exercise {
             this.reps,
             this.sets,
             this.max,
-            undefined
+            ""
         )
     }
 }
@@ -83,7 +83,7 @@ class HistoricalExercise extends Exercise {
         if (weight != undefined && reps != undefined && sets != undefined) {
             this.volume = weight * reps * sets
         } else {
-            this.volume = undefined
+            this.volume = ""
         }
     }
 

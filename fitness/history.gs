@@ -11,7 +11,7 @@ function log_to_history(record) {
         create_history_sheet();
     }
 
-    historySheet.appendRow(
+    historySheet.appendRow([
         record.date,
         record.type,
         record.exercise_name,
@@ -21,7 +21,7 @@ function log_to_history(record) {
         record.volume,
         record.max,
         record.mph
-    );
+    ]);
 
-    record.log_obect();
+    record.log_object();
 }

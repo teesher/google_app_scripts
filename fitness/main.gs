@@ -34,7 +34,7 @@ function onEdit(e) {
 	}
 
 	if (col == CARDIO_COL) {
-		process_cardio_data();
+		process_cardio_data(e);
 	}
 }
 
