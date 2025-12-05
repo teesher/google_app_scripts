@@ -49,6 +49,7 @@ function is_invalid_value(val){
 // process lifting data
 // ------------------------------------------------------------------------------------------------
 function process_workout_data(e) {
+	Logger.log("Processing update to lift exercise.")
 	var row = e.range.getRow();
 	var edited_sheet = e.source.getActiveSheet();
 
@@ -75,6 +76,7 @@ function process_workout_data(e) {
 // process cardio data
 // ------------------------------------------------------------------------------------------------
 function process_cardio_data(e) {
+	Logger.log("Processing update to cardio exercise.")
 	var row = e.range.getRow();
 	var edited_sheet = e.source.getActiveSheet();
 

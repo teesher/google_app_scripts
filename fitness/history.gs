@@ -2,6 +2,7 @@
 // Logs workout data to History sheet with timestamp
 // ------------------------------------------------------------------------------------------------
 function log_to_history(record) {
+    Logger.log("Attempting to log record to history.")
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var historySheet = ss.getSheetByName("history");
 
