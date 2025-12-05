@@ -89,12 +89,12 @@
 
     // Log this to the History sheet
     log_to_history(type, exercise, weight, reps, sets, max_reps);
-    }
+  }
 
-    // ------------------------------------------------------------------------------------------------
-    // helper function for value validity
-    // ------------------------------------------------------------------------------------------------
-    function is_invalid_value(val){
+  // ------------------------------------------------------------------------------------------------
+  // helper function for value validity
+  // ------------------------------------------------------------------------------------------------
+  function is_invalid_value(val){
     return !val || val == "" || val == undefined;
   }
   
