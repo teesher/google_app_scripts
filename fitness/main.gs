@@ -51,22 +51,22 @@ function is_invalid_value(val){
 function process_workout_data(e) {
 	var row = e.range.getRow();
 	var edited_sheet = e.source.getActiveSheet();
-	var type = edited_sheet.getRange(row, 1).getValue();      // Column A -- type
-	var exercise = edited_sheet.getRange(row, 2).getValue();  // Column B -- exercise
-	var weight = edited_sheet.getRange(row, 3).getValue();    // Column C -- weight
-	var reps = edited_sheet.getRange(row, 4).getValue();      // Column D -- reps
-	var sets = edited_sheet.getRange(row, 5).getValue();      // Column E -- sets
-	var max_reps = edited_sheet.getRange(row, 6).getValue();     // Column F -- max_reps
 
-	if (is_invalid_value(exercise) || is_invalid_value(weight) || is_invalid_value(reps) || is_invalid_value(sets)) {
+	var lift_exercise_object = new LiftExercise(
+		edited_sheet.getRange(row, 1).getValue(),
+		edited_sheet.getRange(row, 2).getValue(),
+		edited_sheet.getRange(row, 3).getValue(),
+		edited_sheet.getRange(row, 4).getValue(),
+		edited_sheet.getRange(row, 5).getValue(),
+		edited_sheet.getRange(row, 6).getValue()
+	);
+
+	if (!lift_exercise_object.is_valid()) {
 		Logger.log("Not performing update: Required value(s) empty")
 		return;
 	}
 
-	// Log this to the History sheet
-	log_to_history(type, exercise, weight, reps, sets, max_reps);
-
-	// Now trigger chart regeneration
+	log_to_history(lift_exercise_object.generate_historical_record());
 	trigger_chart_generation();
 
 }
@@ -75,7 +75,24 @@ function process_workout_data(e) {
 // process cardio data
 // ------------------------------------------------------------------------------------------------
 function process_cardio_data(e) {
-	return;
+	var row = e.range.getRow();
+	var edited_sheet = e.source.getActiveSheet();
+
+	var cardio_exercise_object = new CardioExercise(
+		edited_sheet.getRange(row, 1).getValue(),
+		edited_sheet.getRange(row, 2).getValue(),
+		edited_sheet.getRange(row, 7).getValue()
+	);
+
+	if (!cardio_exercise_object.is_valid()) {
+		Logger.log("Not performing update: Required value(s) empty")
+		return;
+	}
+
+	log_to_history(cardio_exercise_object.generate_historical_record());
+
+	// TBD regen specific chart. . .
+	// trigger_chart_generation();
 }
   
 

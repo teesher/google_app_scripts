@@ -128,10 +128,9 @@ function create_progress_charts(charts_sheet, data) {
 function group_by_exercise_and_type(data) {
   var exercises = {};
   
-  // Skip header row (index 0)
   for (var i = 1; i < data.length; i++) {
     var row = data[i];
-    var date = row[0];      // Timestamp
+    var date = row[0];      // date
     var type = row[1];     // Type
     var exercise = row[2];  // Exercise
     var weight = row[3];    // Weight
