@@ -1,3 +1,24 @@
+function trigger_chart_generation() {
+    // var setup
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var history_sheet = ss.getSheetByName("history");
+    var charts_sheet = ss.getSheetByName("charts");
+
+    // Get or create the Charts sheet
+    if (!charts_sheet) {
+      charts_sheet = ss.insertSheet("charts");
+    }
+
+    // get historical data
+    var data = history_sheet.getDataRange().getValues();
+
+    // Clear existing charts
+    clear_charts();
+    
+    // create charts
+    create_progress_charts(charts_sheet, data);
+}
+
 // ------------------------------------------------------------------------------------------------
 // Create or update progress charts based on history data
 // ------------------------------------------------------------------------------------------------

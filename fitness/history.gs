@@ -7,13 +7,13 @@
 
         // Create History sheet if it doesn't exist
         if (!historySheet) {
-        historySheet = ss.insertSheet("history");
-        // Add headers
-        historySheet.getRange("A1:H1").setValues([
-        ["Timestamp", "Type", "Exercise", "Weight (lbs)", "Reps", "Sets", "Volume", "Max"]
-        ]);
-        // Format header
-        historySheet.getRange("A1:H1").setFontWeight("bold");
+            historySheet = ss.insertSheet("history");
+            // Add headers
+            historySheet.getRange("A1:H1").setValues([
+            ["Timestamp", "Type", "Exercise", "Weight (lbs)", "Reps", "Sets", "Volume", "Max"]
+            ]);
+            // Format header
+            historySheet.getRange("A1:H1").setFontWeight("bold");
         }
 
         // Calculate volume (weight × reps × sets)
