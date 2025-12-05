@@ -1,6 +1,6 @@
 var MIN_EXERCISE_COL = 3;
 var MAX_EXERCISE_COL = 6;
-var CARDIO_COL = 9;
+var CARDIO_COL = 7;
 
 // ------------------------------------------------------------------------------------------------
 // onEdit - runs automatically when you edit any cell
@@ -20,6 +20,7 @@ function onEdit(e) {
 
 	// Skip header row
 	if (row === 1) {
+		Logger.log("Non applicable cell edited. No action to be taken.");
 		return;
 	}
 
@@ -33,8 +34,12 @@ function onEdit(e) {
 		process_workout_data(e);
 	}
 
-	if (col == CARDIO_COL) {
+	else if (col == CARDIO_COL) {
 		process_cardio_data(e);
+	}
+	
+	else {
+		Logger.log("Non applicable cell edited. No action to be taken.");
 	}
 }
 
