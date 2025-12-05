@@ -30,7 +30,7 @@ function onEdit(e) {
 	}
 
 	if (col >= MIN_EXERCISE_COL && col <= MAX_EXERCISE_COL) {
-		process_workout_data();
+		process_workout_data(e);
 	}
 
 	if (col == CARDIO_COL) {
@@ -48,7 +48,8 @@ function is_invalid_value(val){
 // ------------------------------------------------------------------------------------------------
 // process lifting data
 // ------------------------------------------------------------------------------------------------
-function process_workout_data() {
+function process_workout_data(e) {
+	var row = e.range.getRow();
 	var edited_sheet = e.source.getActiveSheet();
 	var type = edited_sheet.getRange(row, 1).getValue();      // Column A -- type
 	var exercise = edited_sheet.getRange(row, 2).getValue();  // Column B -- exercise
@@ -73,7 +74,7 @@ function process_workout_data() {
 // ------------------------------------------------------------------------------------------------
 // process cardio data
 // ------------------------------------------------------------------------------------------------
-function process_cardio_data() {
+function process_cardio_data(e) {
 	return;
 }
   
