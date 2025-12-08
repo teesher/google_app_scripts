@@ -1,28 +1,64 @@
-function trigger_chart_generation() {
-    // var setup
+function trigger_chart_generation(chart_type) {
+    var chart_type = "Upper Body";
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var history_sheet = ss.getSheetByName("history");
-    var charts_sheet = ss.getSheetByName("charts");
+    var charts_sheet = ss.getSheetByName(chart_type);
+
+    // generate exercise type
+    var exercise_type = "Lift";
+    if (chart_type == "Cardio") {
+      exercise_type = chart_type;
+    }
 
     // get historical data
     var data = history_sheet.getDataRange().getValues();
+    type_specific_data = generate_type_specific_subset_of_data(data, chart_type)
 
-    // Clear existing charts
-    clear_charts();
+    // // Clear existing charts
+    clear_chart_sheet(charts_sheet);
 
-    // create charts
-    create_progress_charts(charts_sheet, data);
+    // // create charts
+    create_progress_charts(charts_sheet, type_specific_data, exercise_type);
+}
+
+// ------------------------------------------------------------------------------------------------
+// HELPER: reduce helper function
+// ------------------------------------------------------------------------------------------------
+function generate_type_specific_subset_of_data(data, type) {
+  var deduplicated = data
+      .filter(row => row[1] == type)
+      .reduce((accumulator, current_row) => {
+        var key = current_row[0] + "|" + current_row[1] + "|" + current_row[2];
+        accumulator[key] = current_row;
+        return accumulator;
+      }, {});
+
+  return Object.values(deduplicated);
 }
 
 // ------------------------------------------------------------------------------------------------
 // Create or update progress charts based on history data
 // ------------------------------------------------------------------------------------------------
-function create_progress_charts(charts_sheet, data) {
-  // Group data by exercise and type
-  var exercises_data = group_by_exercise_and_type(data);
+function create_progress_charts(charts_sheet, data, exercise_type) {
+  
+  // Group data by exercise
+  var exercises = {};
+  for (var i = 0; i < data.length; i++) {
+    var row = data[i];
+    var exercise = row[2]; // Exercise name is in column 2
+    
+    if (!exercises[exercise]) {
+      exercises[exercise] = [];
+    }
+    
+    exercises[exercise].push({
+      date: row[0],      // Timestamp
+      weight: row[3],    // Weight (lbs)
+      volume: row[6]     // Volume
+    });
+  }
   
   // Create charts for each exercise
-  var exercises = Object.keys(exercises_data).sort();
   var charts_created = 0;
   var chart_row = 1;
   var chart_col = 1;
@@ -30,16 +66,20 @@ function create_progress_charts(charts_sheet, data) {
   var charts_per_row = 2;  // Number of charts per row
   var current_data_row = 1;
   
-  for (var i = 0; i < exercises.length; i++) {
-    var exercise = exercises[i];
-    var exercise_rows = exercises_data[exercise];
+  for (var exercise in exercises) {
+    var exercise_rows = exercises[exercise];
     
     // Skip if no data points
     if (exercise_rows.length < 1) {
       continue;
     }
     
-    // Write minimal data
+    // Sort by date (in case they're not in order)
+    exercise_rows.sort(function(a, b) {
+      return new Date(a.date) - new Date(b.date);
+    });
+    
+    // Write minimal data headers
     charts_sheet.getRange(current_data_row, data_col, 1, 3).setValues([
       ["Date", "Weight (lbs)", "Volume"]
     ]);
@@ -107,47 +147,7 @@ function create_progress_charts(charts_sheet, data) {
   // Log summary
   Logger.log("Created " + charts_created + " exercise charts");
   
-  if (charts_created === 0) {
-    Logger.log("No charts created - make sure you have workout history data!");
-  } else if (data.length < 10) {
-    Logger.log("Tip: Add more workout data over time to see better trends!");
-  }
-  
   // Refresh display
   SpreadsheetApp.flush();
-}
-
-// ------------------------------------------------------------------------------------------------
-// Group history data by exercise
-// ------------------------------------------------------------------------------------------------
-function group_by_exercise_and_type(data) {
-  var exercises = {};
-  
-  for (var i = 1; i < data.length; i++) {
-    var row = data[i];
-    var date = row[0];      // date
-    var type = row[1];     // Type
-    var exercise = row[2];  // Exercise
-    var weight = row[3];    // Weight
-    var reps = row[4];      // Reps
-    var sets = row[5];      // Sets
-    var volume = row[6];    // Volume
-    
-    type_and_exercise = type + " - " + exercise;
-    
-    if (!exercises[type_and_exercise]) {
-      exercises[type_and_exercise] = [];
-    }
-    
-    exercises[type_and_exercise].push({
-      date: date,
-      weight: weight,
-      reps: reps,
-      sets: sets,
-      volume: volume
-    });
-  }
-  
-  return exercises;
 }
 

@@ -1,7 +1,3 @@
-var MIN_EXERCISE_COL = 3;
-var MAX_EXERCISE_COL = 6;
-var CARDIO_COL = 7;
-
 // ------------------------------------------------------------------------------------------------
 // onEdit - runs automatically when you edit any cell
 // ------------------------------------------------------------------------------------------------
@@ -16,7 +12,7 @@ function onEdit(e) {
 
 	// Get details about the edit
 	var row = e.range.getRow();
-	var col = e.range.getColumn();
+	var general_type = row[7];
 
 	// Skip header row
 	if (row === 1) {
@@ -30,11 +26,11 @@ function onEdit(e) {
 		return;
 	}
 
-	if (col >= MIN_EXERCISE_COL && col <= MAX_EXERCISE_COL) {
+	if (general_type == GENERAL_TYPE_LIFT) {
 		process_workout_data(e);
 	}
 
-	else if (col == CARDIO_COL) {
+	else if (general_type == GENERAL_TYPE_CARDIO) {
 		process_cardio_data(e);
 	}
 	
@@ -61,6 +57,7 @@ function process_workout_data(e) {
 	var lift_exercise_object = new LiftExercise(
 		edited_sheet.getRange(row, 1).getValue(),
 		edited_sheet.getRange(row, 2).getValue(),
+		edited_sheet.getRange(row, 8).getValue(),
 		edited_sheet.getRange(row, 3).getValue(),
 		edited_sheet.getRange(row, 4).getValue(),
 		edited_sheet.getRange(row, 5).getValue(),
@@ -73,7 +70,8 @@ function process_workout_data(e) {
 	}
 
 	log_to_history(lift_exercise_object.generate_historical_record());
-	// trigger_chart_generation(); // Disable for now
+
+	// trigger_chart_generation(edited_sheet.getRange(row, 1).getValue()); // Disable for now
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -87,6 +85,7 @@ function process_cardio_data(e) {
 	var cardio_exercise_object = new CardioExercise(
 		edited_sheet.getRange(row, 1).getValue(),
 		edited_sheet.getRange(row, 2).getValue(),
+		edited_sheet.getRange(row, 8).getValue(),
 		edited_sheet.getRange(row, 7).getValue()
 	);
 
@@ -97,7 +96,7 @@ function process_cardio_data(e) {
 
 	log_to_history(cardio_exercise_object.generate_historical_record());
 
-	// trigger_chart_generation(); // Disable for now
+	// trigger_chart_generation("Cardio"); // Disable for now
 }
   
 
