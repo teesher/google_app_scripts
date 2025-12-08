@@ -88,32 +88,3 @@ class HistoricalExercise extends Exercise {
         );
     }
 }
-// cardio
-// date 
-
-class ExerciseChartGenerator {
-    // sheet
-    // minimal data / headers
-    constructor(type, exercises) {
-        this.type = type;
-        this.exercises = exercises;
-    }
-
-    generate_type_specific_data() {
-        var type_specific_exercises = {};
-        for (var i = 1; i < this.exercises.length; i++) {
-            var row = data[i];
-            var date = row[0];      
-            var type = row[1];     
-            var exercise = row[2];  
-            var weight = row[3];    
-            var reps = row[4];      
-            var sets = row[5];      
-            var volume = row[6];    
-            var max = row[7];
-            var mph = row[8];
-        }
-    }
-
-
-}
