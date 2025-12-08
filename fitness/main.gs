@@ -73,8 +73,7 @@ function process_workout_data(e) {
 	}
 
 	log_to_history(lift_exercise_object.generate_historical_record());
-	trigger_chart_generation();
-
+	// trigger_chart_generation(); // Disable for now
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -98,8 +97,7 @@ function process_cardio_data(e) {
 
 	log_to_history(cardio_exercise_object.generate_historical_record());
 
-	// TBD regen specific chart. . .
-	// trigger_chart_generation();
+	// trigger_chart_generation(); // Disable for now
 }
   
 
