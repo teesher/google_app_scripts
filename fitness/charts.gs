@@ -1,40 +1,17 @@
-function onOpen(e) {
-  // get active sheet
-  opened_sheet = e.source.getActiveSheet();
-  if (opened_sheet.getName() != "charts") {
-    // only trigger on charts
-    return;
-  }
+function trigger_chart_generation() {
+    // var setup
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var history_sheet = ss.getSheetByName("history");
+    var charts_sheet = ss.getSheetByName("charts");
 
-  // var setup
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var history_sheet = ss.getSheetByName("history");
-  var charts_sheet = ss.getSheetByName("charts");
+    // get historical data
+    var data = history_sheet.getDataRange().getValues();
 
-  // history sheet check
-  if (!history_sheet) {
-    Logger.log("ERROR: 'history' sheet not found. No data to chart.");
-    return;
-  }
-  
-  // Get or create the Charts sheet
-  if (!charts_sheet) {
-    charts_sheet = ss.insertSheet("charts");
-  }
+    // Clear existing charts
+    clear_charts();
 
-  // get historical data
-  var data = history_sheet.getDataRange().getValues();
-  if (data.length <= 1) {
-    Logger.log("No history data to chart. Add workouts to see charts!");
-    return;
-  }
-  Logger.log("Historical data: " + (data.length - 1) + " workout entries");
-
-  // Clear existing charts
-  clear_charts();
-
-  // create charts
-  create_progress_charts(charts_sheet, data);
+    // create charts
+    create_progress_charts(charts_sheet, data);
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -141,33 +118,14 @@ function create_progress_charts(charts_sheet, data) {
 }
 
 // ------------------------------------------------------------------------------------------------
-// Create or update progress charts based on history data
-// ------------------------------------------------------------------------------------------------
-function clear_charts(){
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  // Get or create the Charts sheet
-  var charts_sheet = ss.getSheetByName("charts");
-  
-  // Clear existing charts
-  var existing_charts = charts_sheet.getCharts();
-  for (var i = 0; i < existing_charts.length; i++) {
-    charts_sheet.removeChart(existing_charts[i]);
-  }
-  
-  // Clear existing data
-  charts_sheet.clear();
-}
-
-// ------------------------------------------------------------------------------------------------
 // Group history data by exercise
 // ------------------------------------------------------------------------------------------------
 function group_by_exercise_and_type(data) {
   var exercises = {};
   
-  // Skip header row (index 0)
   for (var i = 1; i < data.length; i++) {
     var row = data[i];
-    var date = row[0];      // Timestamp
+    var date = row[0];      // date
     var type = row[1];     // Type
     var exercise = row[2];  // Exercise
     var weight = row[3];    // Weight
@@ -191,35 +149,5 @@ function group_by_exercise_and_type(data) {
   }
   
   return exercises;
-}
-
-// ------------------------------------------------------------------------------------------------
-// Helper function: Refresh charts manually
-// ------------------------------------------------------------------------------------------------
-function refresh_charts() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var history_sheet = ss.getSheetByName("history");
-  var charts_sheet = ss.getSheetByName("charts");
-  
-  if (!history_sheet) {
-    Logger.log("ERROR: 'history' sheet not found.");
-    return;
-  }
-  
-  if (!charts_sheet) {
-    charts_sheet = ss.insertSheet("charts");
-  }
-  
-  var data = history_sheet.getDataRange().getValues();
-  if (data.length <= 1) {
-    Logger.log("No history data to chart.");
-    return;
-  }
-  
-  Logger.log("Refreshing charts...");
-  clear_charts();
-  create_progress_charts(charts_sheet, data);
-  charts_sheet.activate();
-  Logger.log("Charts refreshed!");
 }
 
