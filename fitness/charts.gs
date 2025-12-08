@@ -4,11 +4,6 @@ function trigger_chart_generation() {
     var history_sheet = ss.getSheetByName("history");
     var charts_sheet = ss.getSheetByName("charts");
 
-    // Get or create the Charts sheet
-    if (!charts_sheet) {
-      charts_sheet = ss.insertSheet("charts");
-    }
-
     // get historical data
     var data = history_sheet.getDataRange().getValues();
 

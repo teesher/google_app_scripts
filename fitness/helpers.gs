@@ -48,6 +48,7 @@ function clear_charts(){
 
 // ------------------------------------------------------------------------------------------------
 // HELPER: Snapshot all current workouts to history
+// TBD rework
 // ------------------------------------------------------------------------------------------------
 function snapshot_current_workouts() {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -106,18 +107,4 @@ function clear_history() {
         }
         Logger.log("History cleared!");
     }
-}
-
-// ------------------------------------------------------------------------------------------------
-// HELPER: Create history sheet
-// ------------------------------------------------------------------------------------------------
-function create_history_sheet() {
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    historySheet = ss.insertSheet("history");
-    // Add headers
-    historySheet.getRange("A1:I1").setValues([
-    ["Timestamp", "Type", "Exercise", "Weight (lbs)", "Reps", "Sets", "Volume", "Max", "MPH"]
-    ]);
-    // Format header
-    historySheet.getRange("A1:I1").setFontWeight("bold");
 }

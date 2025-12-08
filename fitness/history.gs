@@ -6,11 +6,6 @@ function log_to_history(record) {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var historySheet = ss.getSheetByName("history");
 
-    // Create History sheet if it doesn't exist
-    if (!historySheet) {
-        create_history_sheet();
-    }
-
     historySheet.appendRow([
         record.date,
         record.type,
