@@ -17,8 +17,8 @@ class Exercise {
 // cardio exercise class
 // ------------------------------------------------------------------------------------------------
 class CardioExercise extends Exercise {
-    constructor(type, exercise_name, mph) {
-        super(type, exercise_name);
+    constructor(type, exercise_name, general_type, mph) {
+        super(type, exercise_name, general_type);
         this.mph = mph;
     }
 
@@ -27,7 +27,7 @@ class CardioExercise extends Exercise {
     } 
 
     generate_historical_record() {
-        return new HistoricalExercise(this.type, this.exercise_name, "", "", "", "", this.mph)
+        return new HistoricalExercise(this.type, this.exercise_name, this.general_type, "", "", "", "", this.mph)
     }
 }
 
@@ -49,7 +49,7 @@ class LiftExercise extends Exercise {
     }
 
     generate_historical_record() {
-        return new HistoricalExercise(this.type, this.exercise_name, this.weight, this.reps, this.sets, this.max, "")
+        return new HistoricalExercise(this.type, this.exercise_name, this.general_type, this.weight, this.reps, this.sets, this.max, "")
     }
 }
 

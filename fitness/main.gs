@@ -12,7 +12,7 @@ function onEdit(e) {
 
 	// Get details about the edit
 	var row = e.range.getRow();
-	var general_type = row[7];
+	var general_type = edited_sheet.getRange(row, 8).getValue();
 
 	// Skip header row
 	if (row === 1) {
@@ -55,13 +55,13 @@ function process_workout_data(e) {
 	var edited_sheet = e.source.getActiveSheet();
 
 	var lift_exercise_object = new LiftExercise(
-		edited_sheet.getRange(row, 1).getValue(),
-		edited_sheet.getRange(row, 2).getValue(),
-		edited_sheet.getRange(row, 8).getValue(),
-		edited_sheet.getRange(row, 3).getValue(),
-		edited_sheet.getRange(row, 4).getValue(),
-		edited_sheet.getRange(row, 5).getValue(),
-		edited_sheet.getRange(row, 6).getValue()
+		edited_sheet.getRange(row, 1).getValue(), // type
+		edited_sheet.getRange(row, 2).getValue(), // exercise name
+		edited_sheet.getRange(row, 8).getValue(), // general type
+		edited_sheet.getRange(row, 3).getValue(), // weight
+		edited_sheet.getRange(row, 4).getValue(), // reps
+		edited_sheet.getRange(row, 5).getValue(), // sets
+		edited_sheet.getRange(row, 6).getValue() // max
 	);
 
 	if (!lift_exercise_object.is_valid()) {
@@ -83,10 +83,10 @@ function process_cardio_data(e) {
 	var edited_sheet = e.source.getActiveSheet();
 
 	var cardio_exercise_object = new CardioExercise(
-		edited_sheet.getRange(row, 1).getValue(),
-		edited_sheet.getRange(row, 2).getValue(),
-		edited_sheet.getRange(row, 8).getValue(),
-		edited_sheet.getRange(row, 7).getValue()
+		edited_sheet.getRange(row, 1).getValue(), // type
+		edited_sheet.getRange(row, 2).getValue(), // exercise name
+		edited_sheet.getRange(row, 8).getValue(), // general type
+		edited_sheet.getRange(row, 7).getValue() // mph
 	);
 
 	if (!cardio_exercise_object.is_valid()) {
