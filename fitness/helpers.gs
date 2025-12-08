@@ -1,41 +1,7 @@
 // ------------------------------------------------------------------------------------------------
-// HELPER: Refresh charts manually
+// HELPER: clear charts sheet
 // ------------------------------------------------------------------------------------------------
-function refresh_charts() {
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var history_sheet = ss.getSheetByName("history");
-    var charts_sheet = ss.getSheetByName("charts");
-
-    if (!history_sheet) {
-        Logger.log("ERROR: 'history' sheet not found.");
-        return;
-    }
-
-    if (!charts_sheet) {
-        charts_sheet = ss.insertSheet("charts");
-    }
-
-    var data = history_sheet.getDataRange().getValues();
-    if (data.length <= 1) {
-        Logger.log("No history data to chart.");
-        return;
-    }
-
-    Logger.log("Refreshing charts...");
-    clear_charts();
-    create_progress_charts(charts_sheet, data);
-    charts_sheet.activate();
-    Logger.log("Charts refreshed!");
-}
-
-// ------------------------------------------------------------------------------------------------
-// HELPER: Create or update progress charts based on history data
-// ------------------------------------------------------------------------------------------------
-function clear_charts(){
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    // Get or create the Charts sheet
-    var charts_sheet = ss.getSheetByName("charts");
-
+function clear_chart_sheet(charts_sheet){
     // Clear existing charts
     var existing_charts = charts_sheet.getCharts();
     for (var i = 0; i < existing_charts.length; i++) {
@@ -93,7 +59,7 @@ function clear_history() {
         // Keep header row, clear everything else
         var last_row = history_sheet.getLastRow();
         if (last_row > 1) {
-        history_sheet.deleteRows(2, last_row - 1);
+            history_sheet.deleteRows(2, last_row - 1);
         }
         Logger.log("History cleared!");
     }
