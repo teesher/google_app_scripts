@@ -1,4 +1,14 @@
 // ------------------------------------------------------------------------------------------------
+// HELPER: create upper body charts
+// ------------------------------------------------------------------------------------------------
+function create_upper_body_charts() {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var upper_body_sheet = ss.getSheetByName("Upper Body");
+    clear_chart_sheet(upper_body_sheet);
+    trigger_chart_generation("Upper Body", GENERAL_TYPE_LIFT);
+}
+
+// ------------------------------------------------------------------------------------------------
 // HELPER: clear charts sheet
 // ------------------------------------------------------------------------------------------------
 function clear_chart_sheet(charts_sheet){

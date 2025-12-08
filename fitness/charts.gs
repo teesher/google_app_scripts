@@ -1,14 +1,8 @@
-function trigger_chart_generation(chart_type) {
+function trigger_chart_generation(chart_type, exercise_general_type) {
     var chart_type = "Upper Body";
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var history_sheet = ss.getSheetByName("history");
     var charts_sheet = ss.getSheetByName(chart_type);
-
-    // generate exercise type
-    var exercise_type = "Lift";
-    if (chart_type == "Cardio") {
-      exercise_type = chart_type;
-    }
 
     // get historical data
     var data = history_sheet.getDataRange().getValues();
@@ -18,7 +12,7 @@ function trigger_chart_generation(chart_type) {
     clear_chart_sheet(charts_sheet);
 
     // // create charts
-    create_progress_charts(charts_sheet, type_specific_data, exercise_type);
+    create_progress_charts(charts_sheet, type_specific_data, exercise_general_type);
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -39,7 +33,14 @@ function generate_type_specific_subset_of_data(data, type) {
 // ------------------------------------------------------------------------------------------------
 // Create or update progress charts based on history data
 // ------------------------------------------------------------------------------------------------
-function create_progress_charts(charts_sheet, data, exercise_type) {
+function create_progress_charts(charts_sheet, data, general_type) {
+  
+  // Get the chart configuration for this general_type
+  var config = CHART_CONFIGS[general_type];
+  if (!config) {
+    Logger.log("No chart configuration found for general_type: " + general_type);
+    return;
+  }
   
   // Group data by exercise
   var exercises = {};
@@ -51,11 +52,14 @@ function create_progress_charts(charts_sheet, data, exercise_type) {
       exercises[exercise] = [];
     }
     
-    exercises[exercise].push({
-      date: row[0],      // Timestamp
-      weight: row[3],    // Weight (lbs)
-      volume: row[6]     // Volume
-    });
+    // Extract data based on config's dataColumns
+    var exerciseData = {};
+    for (var j = 0; j < config.dataColumns.length; j++) {
+      var colIndex = config.dataColumns[j];
+      exerciseData[config.headers[j]] = row[colIndex];
+    }
+    
+    exercises[exercise].push(exerciseData);
   }
   
   // Create charts for each exercise
@@ -65,6 +69,7 @@ function create_progress_charts(charts_sheet, data, exercise_type) {
   var data_col = 50;  // Put data far to the right, hidden from normal view
   var charts_per_row = 2;  // Number of charts per row
   var current_data_row = 1;
+  var num_columns = config.headers.length;
   
   for (var exercise in exercises) {
     var exercise_rows = exercises[exercise];
@@ -76,26 +81,25 @@ function create_progress_charts(charts_sheet, data, exercise_type) {
     
     // Sort by date (in case they're not in order)
     exercise_rows.sort(function(a, b) {
-      return new Date(a.date) - new Date(b.date);
+      return new Date(a.Date) - new Date(b.Date);
     });
     
-    // Write minimal data headers
-    charts_sheet.getRange(current_data_row, data_col, 1, 3).setValues([
-      ["Date", "Weight (lbs)", "Volume"]
+    // Write data headers from config
+    charts_sheet.getRange(current_data_row, data_col, 1, num_columns).setValues([
+      config.headers
     ]);
     
-    // Data rows
+    // Write data rows
     for (var j = 0; j < exercise_rows.length; j++) {
-      var row = exercise_rows[j];
-      charts_sheet.getRange(current_data_row + 1 + j, data_col, 1, 3).setValues([[
-        row.date,
-        row.weight,
-        row.volume
-      ]]);
+      var rowData = [];
+      for (var k = 0; k < config.headers.length; k++) {
+        rowData.push(exercise_rows[j][config.headers[k]]);
+      }
+      charts_sheet.getRange(current_data_row + 1 + j, data_col, 1, num_columns).setValues([rowData]);
     }
     
     // Create chart from data range
-    var data_range = charts_sheet.getRange(current_data_row, data_col, exercise_rows.length + 1, 3);
+    var data_range = charts_sheet.getRange(current_data_row, data_col, exercise_rows.length + 1, num_columns);
     
     var chart = charts_sheet.newChart()
       .setChartType(Charts.ChartType.LINE)
@@ -110,24 +114,8 @@ function create_progress_charts(charts_sheet, data, exercise_type) {
         slantedText: true,
         slantedTextAngle: 45
       })
-      .setOption('series', {
-        0: {
-          targetAxisIndex: 0,
-          color: '#3366CC',
-          lineWidth: 3,
-          pointSize: 5
-        },  // Weight - blue, left axis
-        1: {
-          targetAxisIndex: 1,
-          color: '#DC3912',
-          lineWidth: 3,
-          pointSize: 5
-        }   // Volume - red, right axis
-      })
-      .setOption('vAxes', {
-        0: {title: 'Weight (lbs)'},
-        1: {title: 'Volume'}
-      })
+      .setOption('series', config.series)
+      .setOption('vAxes', config.axes)
       .build();
     
     charts_sheet.insertChart(chart);
@@ -145,7 +133,7 @@ function create_progress_charts(charts_sheet, data, exercise_type) {
   }
   
   // Log summary
-  Logger.log("Created " + charts_created + " exercise charts");
+  Logger.log("Created " + charts_created + " exercise charts for " + general_type);
   
   // Refresh display
   SpreadsheetApp.flush();
