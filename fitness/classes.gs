@@ -35,8 +35,8 @@ class CardioExercise extends Exercise {
 // lifting exercise class
 // ------------------------------------------------------------------------------------------------
 class LiftExercise extends Exercise {
-    constructor(type, exercise_name, weight, reps, sets, max) {
-        super(type, exercise_name);
+    constructor(type, exercise_name, general_type, weight, reps, sets, max) {
+        super(type, exercise_name, general_type);
         this.weight = weight;
         this.reps = reps;
         this.sets = sets;
@@ -57,8 +57,8 @@ class LiftExercise extends Exercise {
 // historical record class
 // ------------------------------------------------------------------------------------------------
 class HistoricalExercise extends Exercise {
-    constructor(type, exercise_name, weight, reps, sets, max, mph) {
-        super(type, exercise_name);
+    constructor(type, exercise_name, general_type, weight, reps, sets, max, mph) {
+        super(type, exercise_name, general_type);
         this.weight = weight;
         this.reps = reps;
         this.sets = sets;
