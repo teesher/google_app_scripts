@@ -9,6 +9,36 @@ function create_upper_body_charts() {
 }
 
 // ------------------------------------------------------------------------------------------------
+// HELPER: create lower body charts
+// ------------------------------------------------------------------------------------------------
+function create_lower_body_charts() {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var lower_body_sheet = ss.getSheetByName("Lower Body");
+    clear_chart_sheet(lower_body_sheet);
+    trigger_chart_generation("Lower Body", GENERAL_TYPE_LIFT);
+}
+
+// ------------------------------------------------------------------------------------------------
+// HELPER: create full body charts
+// ------------------------------------------------------------------------------------------------
+function create_full_body_charts() {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var full_body_sheet = ss.getSheetByName("Full Body");
+    clear_chart_sheet(full_body_sheet);
+    trigger_chart_generation("Full Body", GENERAL_TYPE_LIFT);
+}
+
+// ------------------------------------------------------------------------------------------------
+// HELPER: create cardio charts
+// ------------------------------------------------------------------------------------------------
+function create_cardio_charts() {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var cardip_sheet = ss.getSheetByName("Cardio");
+    clear_chart_sheet(cardip_sheet);
+    trigger_chart_generation("Cardio", GENERAL_TYPE_CARDIO);
+}
+
+// ------------------------------------------------------------------------------------------------
 // HELPER: clear charts sheet
 // ------------------------------------------------------------------------------------------------
 function clear_chart_sheet(charts_sheet){

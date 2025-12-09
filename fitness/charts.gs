@@ -19,10 +19,14 @@ function trigger_chart_generation(chart_type, exercise_general_type) {
 // HELPER: reduce helper function
 // ------------------------------------------------------------------------------------------------
 function generate_type_specific_subset_of_data(data, type) {
+  date_idx = HISTORY_COL_TO_IDX["Timestamp"];
+  type_idx = HISTORY_COL_TO_IDX["Type"]
+  exercise_idx = HISTORY_COL_TO_IDX["Exercise"]
+
   var deduplicated = data
-      .filter(row => row[1] == type)
+      .filter(row => row[type_idx] == type)
       .reduce((accumulator, current_row) => {
-        var key = current_row[0] + "|" + current_row[1] + "|" + current_row[2];
+        var key = current_row[date_idx] + "|" + current_row[type_idx] + "|" + current_row[exercise_idx];
         accumulator[key] = current_row;
         return accumulator;
       }, {});
@@ -46,7 +50,7 @@ function create_progress_charts(charts_sheet, data, general_type) {
   var exercises = {};
   for (var i = 0; i < data.length; i++) {
     var row = data[i];
-    var exercise = row[2]; // Exercise name is in column 2
+    var exercise = row[HISTORY_COL_TO_IDX["Exercise"]];
     
     if (!exercises[exercise]) {
       exercises[exercise] = [];
