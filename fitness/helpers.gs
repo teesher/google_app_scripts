@@ -1,41 +1,47 @@
 // ------------------------------------------------------------------------------------------------
-// HELPER: Refresh charts manually
+// HELPER: create upper body charts
 // ------------------------------------------------------------------------------------------------
-function refresh_charts() {
+function create_upper_body_charts() {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var history_sheet = ss.getSheetByName("history");
-    var charts_sheet = ss.getSheetByName("charts");
-
-    if (!history_sheet) {
-        Logger.log("ERROR: 'history' sheet not found.");
-        return;
-    }
-
-    if (!charts_sheet) {
-        charts_sheet = ss.insertSheet("charts");
-    }
-
-    var data = history_sheet.getDataRange().getValues();
-    if (data.length <= 1) {
-        Logger.log("No history data to chart.");
-        return;
-    }
-
-    Logger.log("Refreshing charts...");
-    clear_charts();
-    create_progress_charts(charts_sheet, data);
-    charts_sheet.activate();
-    Logger.log("Charts refreshed!");
+    var upper_body_sheet = ss.getSheetByName("Upper Body");
+    clear_chart_sheet(upper_body_sheet);
+    trigger_chart_generation("Upper Body", GENERAL_TYPE_LIFT);
 }
 
 // ------------------------------------------------------------------------------------------------
-// HELPER: Create or update progress charts based on history data
+// HELPER: create lower body charts
 // ------------------------------------------------------------------------------------------------
-function clear_charts(){
+function create_lower_body_charts() {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
-    // Get or create the Charts sheet
-    var charts_sheet = ss.getSheetByName("charts");
+    var lower_body_sheet = ss.getSheetByName("Lower Body");
+    clear_chart_sheet(lower_body_sheet);
+    trigger_chart_generation("Lower Body", GENERAL_TYPE_LIFT);
+}
 
+// ------------------------------------------------------------------------------------------------
+// HELPER: create full body charts
+// ------------------------------------------------------------------------------------------------
+function create_full_body_charts() {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var full_body_sheet = ss.getSheetByName("Full Body");
+    clear_chart_sheet(full_body_sheet);
+    trigger_chart_generation("Full Body", GENERAL_TYPE_LIFT);
+}
+
+// ------------------------------------------------------------------------------------------------
+// HELPER: create cardio charts
+// ------------------------------------------------------------------------------------------------
+function create_cardio_charts() {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var cardip_sheet = ss.getSheetByName("Cardio");
+    clear_chart_sheet(cardip_sheet);
+    trigger_chart_generation("Cardio", GENERAL_TYPE_CARDIO);
+}
+
+// ------------------------------------------------------------------------------------------------
+// HELPER: clear charts sheet
+// ------------------------------------------------------------------------------------------------
+function clear_chart_sheet(charts_sheet){
     // Clear existing charts
     var existing_charts = charts_sheet.getCharts();
     for (var i = 0; i < existing_charts.length; i++) {
@@ -93,7 +99,7 @@ function clear_history() {
         // Keep header row, clear everything else
         var last_row = history_sheet.getLastRow();
         if (last_row > 1) {
-        history_sheet.deleteRows(2, last_row - 1);
+            history_sheet.deleteRows(2, last_row - 1);
         }
         Logger.log("History cleared!");
     }

@@ -9,6 +9,7 @@ function log_to_history(record) {
     historySheet.appendRow([
         record.date,
         record.type,
+        record.general_type,
         record.exercise_name,
         record.weight,
         record.reps,
