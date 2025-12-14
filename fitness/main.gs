@@ -53,15 +53,17 @@ function process_workout_data(e) {
 	Logger.log("Processing update to lift exercise.")
 	var row = e.range.getRow();
 	var edited_sheet = e.source.getActiveSheet();
+	var chart_type = edited_sheet.getRange(row, CURRENT_WORKOUTS_COL_TO_IDX["Type"]).getValue();
+	var exercise_general_type = edited_sheet.getRange(row, CURRENT_WORKOUTS_COL_TO_IDX["General Type"]).getValue();
 
 	var lift_exercise_object = new LiftExercise(
-		edited_sheet.getRange(row, 1).getValue(), // type
-		edited_sheet.getRange(row, 2).getValue(), // exercise name
-		edited_sheet.getRange(row, 8).getValue(), // general type
-		edited_sheet.getRange(row, 3).getValue(), // weight
-		edited_sheet.getRange(row, 4).getValue(), // reps
-		edited_sheet.getRange(row, 5).getValue(), // sets
-		edited_sheet.getRange(row, 6).getValue() // max
+		chart_type, 
+		edited_sheet.getRange(row, CURRENT_WORKOUTS_COL_TO_IDX["Exercise"]).getValue(), 
+		exercise_general_type, 
+		edited_sheet.getRange(row, CURRENT_WORKOUTS_COL_TO_IDX["Weight (lbs)"]).getValue(), 
+		edited_sheet.getRange(row, CURRENT_WORKOUTS_COL_TO_IDX["Reps"]).getValue(), 
+		edited_sheet.getRange(row, CURRENT_WORKOUTS_COL_TO_IDX["Sets"]).getValue(), 
+		edited_sheet.getRange(row, CURRENT_WORKOUTS_COL_TO_IDX["Max"]).getValue() 
 	);
 
 	if (!lift_exercise_object.is_valid()) {
@@ -71,7 +73,7 @@ function process_workout_data(e) {
 
 	log_to_history(lift_exercise_object.generate_historical_record());
 
-	// trigger_chart_generation(edited_sheet.getRange(row, 1).getValue()); // Disable for now
+	trigger_chart_generation(chart_type, exercise_general_type); 
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -81,12 +83,14 @@ function process_cardio_data(e) {
 	Logger.log("Processing update to cardio exercise.")
 	var row = e.range.getRow();
 	var edited_sheet = e.source.getActiveSheet();
+	var chart_type = edited_sheet.getRange(row, CURRENT_WORKOUTS_COL_TO_IDX["Type"]).getValue();
+	var exercise_general_type = edited_sheet.getRange(row, CURRENT_WORKOUTS_COL_TO_IDX["General Type"]).getValue();
 
 	var cardio_exercise_object = new CardioExercise(
-		edited_sheet.getRange(row, 1).getValue(), // type
-		edited_sheet.getRange(row, 2).getValue(), // exercise name
-		edited_sheet.getRange(row, 8).getValue(), // general type
-		edited_sheet.getRange(row, 7).getValue() // mph
+		chart_type, 
+		edited_sheet.getRange(row, CURRENT_WORKOUTS_COL_TO_IDX["Exercise"]).getValue(), 
+		exercise_general_type, 
+		edited_sheet.getRange(row, CURRENT_WORKOUTS_COL_TO_IDX["MPH"]).getValue() 
 	);
 
 	if (!cardio_exercise_object.is_valid()) {
@@ -96,7 +100,7 @@ function process_cardio_data(e) {
 
 	log_to_history(cardio_exercise_object.generate_historical_record());
 
-	// trigger_chart_generation("Cardio"); // Disable for now
+	trigger_chart_generation(chart_type, exercise_general_type);
 }
   
 

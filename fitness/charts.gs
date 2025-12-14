@@ -1,5 +1,4 @@
 function trigger_chart_generation(chart_type, exercise_general_type) {
-    var chart_type = "Upper Body";
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var history_sheet = ss.getSheetByName("history");
     var charts_sheet = ss.getSheetByName(chart_type);
