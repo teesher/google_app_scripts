@@ -12,7 +12,8 @@ function onEdit(e) {
 
 	// Get details about the edit
 	var row = e.range.getRow();
-	var general_type = edited_sheet.getRange(row, 8).getValue();
+	var row_as_array = get_row_as_array(edited_sheet, row);
+	var general_type = row_as_array[CURRENT_WORKOUTS_COL_TO_IDX["General Type"]];
 
 	// Skip header row
 	if (row === 1) {
@@ -27,11 +28,11 @@ function onEdit(e) {
 	}
 
 	if (general_type == GENERAL_TYPE_LIFT) {
-		process_workout_data(e);
+		process_workout_data(row_as_array);
 	}
 
 	else if (general_type == GENERAL_TYPE_CARDIO) {
-		process_cardio_data(e);
+		process_cardio_data(row_as_array);
 	}
 	
 	else {
@@ -49,23 +50,20 @@ function is_invalid_value(val){
 // ------------------------------------------------------------------------------------------------
 // process lifting data
 // ------------------------------------------------------------------------------------------------
-function process_workout_data(e) {
+function process_workout_data(row_as_array) {
 	Logger.log("Processing update to lift exercise.")
-	var row = e.range.getRow();
-	var edited_sheet = e.source.getActiveSheet();
-	var row_as_arry = get_row_as_array(edited_sheet, row);
 
-	var chart_type = row_as_arry[CURRENT_WORKOUTS_COL_TO_IDX["Type"]];
-	var exercise_general_type = row_as_arry[CURRENT_WORKOUTS_COL_TO_IDX["General Type"]];
+	var chart_type = row_as_array[CURRENT_WORKOUTS_COL_TO_IDX["Type"]];
+	var exercise_general_type = row_as_array[CURRENT_WORKOUTS_COL_TO_IDX["General Type"]];
 
 	var lift_exercise_object = new LiftExercise(
 		chart_type, 
-		row_as_arry[CURRENT_WORKOUTS_COL_TO_IDX["Exercise"]],
+		row_as_array[CURRENT_WORKOUTS_COL_TO_IDX["Exercise"]],
 		exercise_general_type, 
-		row_as_arry[CURRENT_WORKOUTS_COL_TO_IDX["Weight (lbs)"]],
-		row_as_arry[CURRENT_WORKOUTS_COL_TO_IDX["Reps"]],
-		row_as_arry[CURRENT_WORKOUTS_COL_TO_IDX["Sets"]],
-		row_as_arry[CURRENT_WORKOUTS_COL_TO_IDX["Max"]]
+		row_as_array[CURRENT_WORKOUTS_COL_TO_IDX["Weight (lbs)"]],
+		row_as_array[CURRENT_WORKOUTS_COL_TO_IDX["Reps"]],
+		row_as_array[CURRENT_WORKOUTS_COL_TO_IDX["Sets"]],
+		row_as_array[CURRENT_WORKOUTS_COL_TO_IDX["Max"]]
 	);
 
 	if (!lift_exercise_object.is_valid()) {
@@ -80,20 +78,17 @@ function process_workout_data(e) {
 // ------------------------------------------------------------------------------------------------
 // process cardio data
 // ------------------------------------------------------------------------------------------------
-function process_cardio_data(e) {
+function process_cardio_data(row_as_array) {
 	Logger.log("Processing update to cardio exercise.")
-	var row = e.range.getRow();
-	var edited_sheet = e.source.getActiveSheet();
-	var row_as_arry = get_row_as_array(edited_sheet, row);
 
-	var chart_type = row_as_arry[CURRENT_WORKOUTS_COL_TO_IDX["Type"]];
-	var exercise_general_type = row_as_arry[CURRENT_WORKOUTS_COL_TO_IDX["General Type"]];
+	var chart_type = row_as_array[CURRENT_WORKOUTS_COL_TO_IDX["Type"]];
+	var exercise_general_type = row_as_array[CURRENT_WORKOUTS_COL_TO_IDX["General Type"]];
 
 	var cardio_exercise_object = new CardioExercise(
 		chart_type, 
-		row_as_arry[CURRENT_WORKOUTS_COL_TO_IDX["Exercise"]],
+		row_as_array[CURRENT_WORKOUTS_COL_TO_IDX["Exercise"]],
 		exercise_general_type, 
-		row_as_arry[CURRENT_WORKOUTS_COL_TO_IDX["MPH"]]
+		row_as_array[CURRENT_WORKOUTS_COL_TO_IDX["MPH"]]
 	);
 
 	if (!cardio_exercise_object.is_valid()) {
