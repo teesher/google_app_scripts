@@ -4,14 +4,14 @@ var GENERAL_TYPE_CARDIO = "Cardio";
 
 // ------------------------------------------------------------------------------------------------
 var CURRENT_WORKOUTS_COL_TO_IDX = {
-  "Type": 0,
-  "Exercise": 1,
-  "Weight (lbs)": 2,
-  "Reps": 3,
-  "Sets": 4,
-  "Max": 5,
-  "MPH": 6,
-  "General Type": 7
+  "Exercise": 0,
+  "Weight (lbs)": 1,
+  "Reps": 2,
+  "Sets": 3,
+  "Max": 4,
+  "MPH": 5,
+  "General Type": 6,
+  "Type": 7
 }
 
 // ------------------------------------------------------------------------------------------------
